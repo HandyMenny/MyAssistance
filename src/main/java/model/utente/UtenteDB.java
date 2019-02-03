@@ -14,12 +14,19 @@ import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 
-import pool.Database;
+import pool.ConnectionManager;
+import pool.ConnectionManagerInterface;
 
 /**
  * This class manages stored data about Users into the database.
  */
 public final class UtenteDB implements UtenteDBInterface {
+
+    /**
+     * The connection manager.
+     */
+    private ConnectionManagerInterface connectionManager;
+
     /**
      * This private attribute is a string that contains
      * the name of the table.
@@ -75,7 +82,18 @@ public final class UtenteDB implements UtenteDBInterface {
      * Default constructor.
      */
     public UtenteDB() {
+        this(ConnectionManager.getInstance());
+    }
 
+    /**
+     * Instantiates a new utente DB.<br>
+     * This should be used only for testing, for others purpose use
+     * {@link #UtenteDB()} instead.
+     *
+     * @param aConnectionManager the connection manager
+     */
+    public UtenteDB(final ConnectionManagerInterface aConnectionManager) {
+        connectionManager = aConnectionManager;
     }
 
     /**
@@ -94,7 +112,7 @@ public final class UtenteDB implements UtenteDBInterface {
         Utente utente = aUtente;
 
         try {
-            connection = Database.getConnection();
+            connection = connectionManager.getConnection();
             preparedStatement = connection.prepareStatement(INSERT);
             int i = 1;
             preparedStatement.setString(i++, aUtente.getUserName());
@@ -119,7 +137,7 @@ public final class UtenteDB implements UtenteDBInterface {
             preparedStatement.setBoolean(i, utente.isGestore());
             return preparedStatement.executeUpdate();
         } finally {
-            Database.freeConnection(connection);
+            connectionManager.freeConnection(connection);
         }
     }
 
@@ -133,7 +151,7 @@ public final class UtenteDB implements UtenteDBInterface {
      *                      during the execution.
      */
     public Utente getById(final int aId) throws SQLException {
-        Connection connection = Database.getConnection();
+        Connection connection = connectionManager.getConnection();
         PreparedStatement preparedStatement;
         try {
             preparedStatement = connection.prepareStatement(GET_BY_ID);
@@ -148,7 +166,7 @@ public final class UtenteDB implements UtenteDBInterface {
                 return null;
             }
         } finally {
-            Database.freeConnection(connection);
+            connectionManager.freeConnection(connection);
         }
     }
 
@@ -162,7 +180,7 @@ public final class UtenteDB implements UtenteDBInterface {
      *                      during the execution.
      */
     public Utente getByUserName(final String aUserName) throws SQLException {
-        Connection connection = Database.getConnection();
+        Connection connection = connectionManager.getConnection();
         try {
             PreparedStatement preparedStatement = connection
                     .prepareStatement(GET_BY_USERNAME);
@@ -177,7 +195,7 @@ public final class UtenteDB implements UtenteDBInterface {
                 return null;
             }
         } finally {
-            Database.freeConnection(connection);
+            connectionManager.freeConnection(connection);
         }
     }
 
@@ -190,12 +208,12 @@ public final class UtenteDB implements UtenteDBInterface {
      *                      during the execution.
      */
     public List<Utente> getAll() throws SQLException {
-        Connection connection = Database.getConnection();
+        Connection connection = connectionManager.getConnection();
         try {
             return parseResultSet(
                     connection.prepareStatement(GET_ALL).executeQuery());
         } finally {
-            Database.freeConnection(connection);
+            connectionManager.freeConnection(connection);
         }
     }
 
@@ -215,14 +233,14 @@ public final class UtenteDB implements UtenteDBInterface {
         int res;
 
         try {
-            connection = Database.getConnection();
+            connection = connectionManager.getConnection();
             s = connection.prepareStatement(DELETE);
             s.setString(1, aEmail);
 
             res = s.executeUpdate();
 
         } finally {
-            Database.freeConnection(connection);
+            connectionManager.freeConnection(connection);
         }
         return (res);
     }
@@ -243,7 +261,7 @@ public final class UtenteDB implements UtenteDBInterface {
         CSU csu = (CSU) aUtente;
 
         try {
-            connection = Database.getConnection();
+            connection = connectionManager.getConnection();
             preparedStatement = connection.prepareStatement(UPDATE);
             preparedStatement.setDate(1,
                     Date.valueOf(csu.getDataSospensione()));
@@ -251,7 +269,7 @@ public final class UtenteDB implements UtenteDBInterface {
             return preparedStatement.executeUpdate();
 
         } finally {
-            Database.freeConnection(connection);
+            connectionManager.freeConnection(connection);
         }
     }
 

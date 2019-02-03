@@ -7,7 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import pool.Database;
+import pool.ConnectionManager;
+import pool.ConnectionManagerInterface;
 
 /**
  * This class allows the management of persistent data relating to offices.
@@ -17,10 +18,27 @@ import pool.Database;
 public final class UfficioTecnicoDB implements UfficioTecnicoDBInterface {
 
     /**
-     * Empty construct.
+     * The connection manager.
+     */
+    private ConnectionManagerInterface connectionManager;
+
+    /**
+     * Instantiates a new ufficio tecnico DB. With default connection manager
      */
     public UfficioTecnicoDB() {
+        this(ConnectionManager.getInstance());
+    }
 
+    /**
+     * Instantiates a new ufficio tecnico DB.<br>
+     * This should be used only for testing, for others purpose use
+     * {@link #UfficioTecnicoDB()} instead.
+     *
+     * @param aConnectionManager the connection manager
+     */
+    public UfficioTecnicoDB(
+            final ConnectionManagerInterface aConnectionManager) {
+        connectionManager = aConnectionManager;
     }
 
     /**
@@ -62,7 +80,7 @@ public final class UfficioTecnicoDB implements UfficioTecnicoDBInterface {
     @Override
     public synchronized int insert(final UfficioTecnico uff)
             throws SQLException {
-        final Connection connection = Database.getConnection();
+        final Connection connection = connectionManager.getConnection();
         try {
 
             final PreparedStatement preparedStatement = connection
@@ -74,7 +92,7 @@ public final class UfficioTecnicoDB implements UfficioTecnicoDBInterface {
             preparedStatement.setString(i, uff.getUbicazione());
             return preparedStatement.executeUpdate();
         } finally {
-            Database.freeConnection(connection);
+            connectionManager.freeConnection(connection);
         }
     }
 
@@ -89,7 +107,7 @@ public final class UfficioTecnicoDB implements UfficioTecnicoDBInterface {
 
     @Override
     public List<UfficioTecnico> getAll() throws SQLException {
-        final Connection connection = Database.getConnection();
+        final Connection connection = connectionManager.getConnection();
         try {
             final PreparedStatement preparedStatement = connection
                     .prepareStatement(SELECT_ALL);
@@ -106,7 +124,7 @@ public final class UfficioTecnicoDB implements UfficioTecnicoDBInterface {
             }
             return uffici;
         } finally {
-            Database.freeConnection(connection);
+            connectionManager.freeConnection(connection);
         }
     }
 
@@ -121,7 +139,7 @@ public final class UfficioTecnicoDB implements UfficioTecnicoDBInterface {
      */
     @Override
     public UfficioTecnico getById(final int aId) throws SQLException {
-        final Connection connection = Database.getConnection();
+        final Connection connection = connectionManager.getConnection();
         UfficioTecnico uff = null;
 
         try {
@@ -140,7 +158,7 @@ public final class UfficioTecnicoDB implements UfficioTecnicoDBInterface {
             }
             return uff;
         } finally {
-            Database.freeConnection(connection);
+            connectionManager.freeConnection(connection);
         }
     }
 }

@@ -15,6 +15,8 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import model.ufficio_tecnico.UfficioTecnico;
+import model.ufficio_tecnico.UfficioTecnicoDBInterface;
 import model.utente.CSU;
 import model.utente.Gestore;
 import model.utente.Utente;
@@ -109,6 +111,8 @@ public final class SegnalazioneBLTest {
      */
     private Tipologia tipologiaTest;
 
+    private UfficioTecnicoDBInterface tecnicoDB;
+
     /**
      * Instantiates a new segnalazione BL test.
      */
@@ -165,8 +169,13 @@ public final class SegnalazioneBLTest {
         when(segnalazioneDB.getByAutore(any(Integer.class)))
                 .thenReturn(listaSegnalazioni);
         when(segnalazioneDB.getByAutore(0)).thenReturn(null);
-
-        manager = new SegnalazioneBL(segnalazioneDB);
+        UfficioTecnico tecnico=new UfficioTecnico();
+        tecnico.setEmail("myassistance.teamC@gmail.com");
+        tecnico.setId(TECNICO_ESISTENTE);
+        tecnico.setNome("Tizio");
+        tecnicoDB = mock(UfficioTecnicoDBInterface.class);
+        when(tecnicoDB.getById(TECNICO_ESISTENTE)).thenReturn(tecnico);
+        manager = new SegnalazioneBL(segnalazioneDB,tecnicoDB);
 
     }
 
@@ -179,7 +188,9 @@ public final class SegnalazioneBLTest {
     public void testInsertSegnalazione1() throws Exception {
         segnalazioneAperta = null;
         final Boolean res = manager.insertSegnalazione(segnalazioneAperta);
+        System.out.println(" ### Test - testInsertSegnalazione1 \n\tinserimento: " + segnalazioneAperta + "\n\tresult: " + res );
         assertFalse(res);
+
     }
 
     /**
@@ -193,6 +204,7 @@ public final class SegnalazioneBLTest {
 
         segnalazioneAperta.setTitolo(aTitolo);
         final Boolean res = manager.insertSegnalazione(segnalazioneAperta);
+        System.out.println(" ### Test - testInsertSegnalazione2 \n\tinserimento: " + segnalazioneAperta + "\n\tresult: " + res );
         assertFalse(res);
     }
 
@@ -207,6 +219,7 @@ public final class SegnalazioneBLTest {
 
         segnalazioneAperta.setTitolo(aTitolo);
         final Boolean res = manager.insertSegnalazione(segnalazioneAperta);
+        System.out.println(" ### Test - testInsertSegnalazione3 \n\tinserimento: " + segnalazioneAperta + "\n\tresult: " + res );
         assertFalse(res);
     }
 
@@ -223,6 +236,7 @@ public final class SegnalazioneBLTest {
         segnalazioneAperta.setTitolo(aTitolo);
         segnalazioneAperta.setDescrizione(aDescrizione);
         final Boolean res = manager.insertSegnalazione(segnalazioneAperta);
+        System.out.println(" ### Test - testInsertSegnalazione4 \n\tinserimento:" + segnalazioneAperta + "\n\tresult: " + res );
         assertFalse(res);
     }
 
@@ -239,6 +253,7 @@ public final class SegnalazioneBLTest {
         segnalazioneAperta.setTitolo(aTitolo);
         segnalazioneAperta.setDescrizione(aDescrizione);
         final Boolean res = manager.insertSegnalazione(segnalazioneAperta);
+                System.out.println(" ### Test - testInsertSegnalazione5 \n\tinserimento:" + segnalazioneAperta + "\n\tresult: " + res );
         assertFalse(res);
     }
 
@@ -258,6 +273,7 @@ public final class SegnalazioneBLTest {
         segnalazioneAperta.setDescrizione(aDescrizione);
         segnalazioneAperta.setTipologia(tipologia);
         final Boolean res = manager.insertSegnalazione(segnalazioneAperta);
+                System.out.println(" ### Test - testInsertSegnalazione6 \n\tinserimento:" + segnalazioneAperta + "\n\tresult: " + res );
         assertFalse(res);
     }
 
@@ -279,6 +295,7 @@ public final class SegnalazioneBLTest {
         segnalazioneAperta.setTipologia(tipologia);
         segnalazioneAperta.setAutore(autore);
         final Boolean res = manager.insertSegnalazione(segnalazioneAperta);
+                System.out.println(" ### Test - testInsertSegnalazione7 \n\tinserimento:" + segnalazioneAperta + "\n\tresult: " + res );
         assertFalse(res);
     }
 
@@ -300,6 +317,8 @@ public final class SegnalazioneBLTest {
         segnalazioneAperta.setTipologia(tipologia);
         segnalazioneAperta.setAutore(autore);
         final Boolean res = manager.insertSegnalazione(segnalazioneAperta);
+        System.out.println(" ### Test - testInsertSegnalazione8 \n\tinserimento:" + segnalazioneAperta + "\n\tresult: " + res );
+
         assertTrue(res);
     }
 
@@ -312,6 +331,7 @@ public final class SegnalazioneBLTest {
     public void testUpdateSegnalazione1() throws Exception {
         final Segnalazione segnalazione = null;
         final Boolean res = manager.updateSegnalazione(segnalazione);
+                System.out.println(" ### Test - testUpdateSegnalazione1 \n\tinserimento:" + segnalazione+ "\n\tresult: " + res );
         assertFalse(res);
     }
 
@@ -339,6 +359,7 @@ public final class SegnalazioneBLTest {
         segnalazione.setCod(cod);
 
         final Boolean res = manager.updateSegnalazione(segnalazione);
+                System.out.println(" ### Test - testUpdateSegnalazione2 \n\tinserimento:" + segnalazione+ "\n\tresult: " + res );
         assertFalse(res);
     }
 
@@ -367,6 +388,7 @@ public final class SegnalazioneBLTest {
         segnalazione.setCod(cod);
 
         final Boolean res = manager.updateSegnalazione(segnalazione);
+                System.out.println(" ### Test - testUpdateSegnalazione3 \n\tinserimento:" + segnalazione+ "\n\tresult: " + res );
         assertFalse(res);
     }
 
@@ -394,6 +416,7 @@ public final class SegnalazioneBLTest {
         segnalazione.setCod(cod);
 
         final Boolean res = manager.updateSegnalazione(segnalazione);
+                System.out.println(" ### Test - testUpdateSegnalazione4 \n\tinserimento: " + segnalazione+ "\n\tresult: " + res );
         assertFalse(res);
     }
 
@@ -421,6 +444,7 @@ public final class SegnalazioneBLTest {
         segnalazione.setCod(cod);
 
         final Boolean res = manager.updateSegnalazione(segnalazione);
+                System.out.println(" ### Test - testUpdateSegnalazione5 \n\tinserimento: " + segnalazione+ "\n\tresult: " + res );
         assertFalse(res);
     }
 
@@ -449,6 +473,7 @@ public final class SegnalazioneBLTest {
         segnalazione.setCod(cod);
 
         final Boolean res = manager.updateSegnalazione(segnalazione);
+                System.out.println(" ### Test - testUpdateSegnalazione6 \n\tinserimento: " + segnalazione+ "\n\tresult: " + res );
         assertFalse(res);
     }
 
@@ -477,6 +502,7 @@ public final class SegnalazioneBLTest {
         segnalazione.setCod(cod);
 
         final Boolean res = manager.updateSegnalazione(segnalazione);
+                System.out.println(" ### Test - testUpdateSegnalazione7 \n\tinserimento: " + segnalazione+ "\n\tresult: " + res );
         assertFalse(res);
     }
 
@@ -505,6 +531,7 @@ public final class SegnalazioneBLTest {
         segnalazione.setCod(cod);
 
         final Boolean res = manager.updateSegnalazione(segnalazione);
+                System.out.println(" ### Test - testUpdateSegnalazione8 \n\tinserimento: " + segnalazione+ "\n\tresult: " + res );
         assertFalse(res);
     }
 
@@ -533,6 +560,7 @@ public final class SegnalazioneBLTest {
         segnalazione.setCod(cod);
 
         final Boolean res = manager.updateSegnalazione(segnalazione);
+                System.out.println(" ### Test - testUpdateSegnalazione9 \n\tinserimento: " + segnalazione+ "\n\tresult: " + res );
         assertFalse(res);
     }
 
@@ -561,6 +589,7 @@ public final class SegnalazioneBLTest {
         segnalazione.setCod(cod);
 
         final Boolean res = manager.updateSegnalazione(segnalazione);
+                System.out.println(" ### Test - testUpdateSegnalazione10 \n\tinserimento:" + segnalazione+ "\n\tresult: " + res );
         assertFalse(res);
     }
 
@@ -587,8 +616,8 @@ public final class SegnalazioneBLTest {
         segnalazione.setDescrizione(aDescrizione);
         segnalazione.setStato(stato);
         segnalazione.setCod(cod);
-
         final Boolean res = manager.updateSegnalazione(segnalazione);
+        System.out.println(" ### Test - testUpdateSegnalazione11 \n\tinserimento:" + segnalazione+ "\n\tresult: " + res );
         assertTrue(res);
     }
 
@@ -603,6 +632,7 @@ public final class SegnalazioneBLTest {
         final int aIdTecnico = TECNICO_ESISTENTE;
 
         final Boolean res = manager.inoltraSegnalazione(aCod, aIdTecnico);
+                System.out.println(" ### Test - testInoltra \n\tInoltro: tecnico=" + aIdTecnico+ "Segnalazione "+ aCod+ "\n\tresult: " + res );
         assertFalse(res);
     }
 
@@ -616,6 +646,7 @@ public final class SegnalazioneBLTest {
         final int aCod = SEGNALAZIONE_RISOLTA;
         final int aIdTecnico = TECNICO_ESISTENTE;
         final Boolean res = manager.inoltraSegnalazione(aCod, aIdTecnico);
+                System.out.println(" ### Test - testInoltra \n\tInoltro: tecnico=" + aIdTecnico+ "Segnalazione "+ aCod+ "\n\tresult: " + res );
         assertFalse(res);
     }
 
@@ -626,9 +657,14 @@ public final class SegnalazioneBLTest {
      */
     @Test
     public void testInoltraSegnalazione3() throws Exception {
+        System.out.println(" ### Test - testInoltraSegnalazione3 ");
+        segnalazioneAperta.setTitolo("URGENTE : si è guastato il termosifone ");
+        segnalazioneAperta.setDescrizione("ciao ciao ciao muovetevi");
         final int aCod = SEGNALAZIONE_APERTA;
         final int aIdTecnico = TECNICO_ESISTENTE;
         final Boolean res = manager.inoltraSegnalazione(aCod, aIdTecnico);
+        System.out.println("\tInoltro : tecnico esistente =" + aIdTecnico+ "\tSegnalazione n. "+ aCod+ "\n\tresult: " + res );
+
         assertTrue(res);
     }
 
@@ -643,6 +679,7 @@ public final class SegnalazioneBLTest {
         final String aMotivazioneRifiuto = "Ciao";
         final Boolean res = manager.rifiutaSegnalazione(aCod,
                 aMotivazioneRifiuto);
+                System.out.println(" ### Test - testRifiuta \n\tRifiuto: MotivazioneRifiuto=" + aMotivazioneRifiuto+ "Segnalazione "+ aCod+ "\n\tresult: " + res );
         assertFalse(res);
     }
 
@@ -657,6 +694,7 @@ public final class SegnalazioneBLTest {
         final String aMotivazioneRifiuto = "Ciao";
         final Boolean res = manager.rifiutaSegnalazione(aCod,
                 aMotivazioneRifiuto);
+                System.out.println(" ### Test - testRifiuta \n\tRifiuto: MotivazioneRifiuto=" + aMotivazioneRifiuto+ "Segnalazione "+ aCod+ "\n\tresult: " + res );
         assertFalse(res);
     }
 
@@ -671,6 +709,7 @@ public final class SegnalazioneBLTest {
         final String aMotivazioneRifiuto = null;
         final Boolean res = manager.rifiutaSegnalazione(aCod,
                 aMotivazioneRifiuto);
+                System.out.println(" ### Test - testRifiuta \n\tRifiuto: MotivazioneRifiuto=" + aMotivazioneRifiuto+ "Segnalazione "+ aCod+ "\n\tresult: " + res );
         assertFalse(res);
     }
 
@@ -685,6 +724,7 @@ public final class SegnalazioneBLTest {
         final String aMotivazioneRifiuto = "";
         final Boolean res = manager.rifiutaSegnalazione(aCod,
                 aMotivazioneRifiuto);
+                System.out.println(" ### Test - testRifiuta \n\tRifiuto: MotivazioneRifiuto=" + aMotivazioneRifiuto+ "Segnalazione "+ aCod+ "\n\tresult: " + res );
         assertFalse(res);
     }
 
@@ -699,6 +739,7 @@ public final class SegnalazioneBLTest {
         final String aMotivazioneRifiuto = "Segnalazione duplicata";
         final Boolean res = manager.rifiutaSegnalazione(aCod,
                 aMotivazioneRifiuto);
+        System.out.println(" ### Test - testRifiutaSegnalazione \nRifiuta: " + aCod + "aMotivazioneRifiuto : " + aMotivazioneRifiuto + "\n\tresult: " + res );
         assertTrue(res);
     }
 
@@ -711,6 +752,7 @@ public final class SegnalazioneBLTest {
     public void testSegnaRisolta1() throws Exception {
         final int aCod = SEGNALAZIONE_NON_ESISTENTE;
         final Boolean res = manager.segnaRisolta(aCod);
+        System.out.println(" ### Test - testSegnaRisolta1 \nNon esistente: " + aCod + "\n\tresult: " + res );
         assertFalse(res);
     }
 
@@ -723,6 +765,8 @@ public final class SegnalazioneBLTest {
     public void testSegnaRisolta2() throws Exception {
         final int aCod = SEGNALAZIONE_RISOLTA;
         final Boolean res = manager.segnaRisolta(aCod);
+        System.out.println(" ### Test - testSegnaRisolta \nRisolta: " + aCod + "\n\tresult: " + res );
+
         assertFalse(res);
     }
 
@@ -735,6 +779,8 @@ public final class SegnalazioneBLTest {
     public void testSegnaRisolta3() throws Exception {
         final int aCod = SEGNALAZIONE_ASSEGNATA;
         final Boolean res = manager.segnaRisolta(aCod);
+        System.out.println(" ### Test - testSegnaRisolta \nAssegnata: " + aCod + "\n\tresult: " + res );
+
         assertTrue(res);
     }
 
@@ -748,6 +794,7 @@ public final class SegnalazioneBLTest {
         final int aCod = SEGNALAZIONE_NON_ESISTENTE;
         final Utente aUtente = utenteTest;
         final Boolean res = manager.deleteSegnalazione(aCod, aUtente);
+        System.out.println(" ### Test - testDeleteSegnalazione \nNon esistente\n\taCod: " + aCod +"\n\taUtente: "+ aUtente+ "\n\tresult: " + res );
         assertFalse(res);
     }
 
@@ -761,6 +808,7 @@ public final class SegnalazioneBLTest {
         final int aCod = SEGNALAZIONE_ASSEGNATA;
         final Utente aUtente = utenteTest;
         final Boolean res = manager.deleteSegnalazione(aCod, aUtente);
+        System.out.println(" ### Test - testDeleteSegnalazione \nNon assegnato aCod: " + aCod +"\naUtente: "+ aUtente+ "\n\tresult: " + res );
         assertFalse(res);
     }
 
@@ -774,6 +822,7 @@ public final class SegnalazioneBLTest {
         final int aCod = SEGNALAZIONE_APERTA;
         final Utente aUtente = null;
         final Boolean res = manager.deleteSegnalazione(aCod, aUtente);
+        System.out.println(" ### Test - testDeleteSegnalazione \nsegnalazione aperta aCod: " + aCod +"\naUtente: "+ aUtente+ "\n\tresult: " + res );
         assertFalse(res);
     }
 
@@ -787,6 +836,8 @@ public final class SegnalazioneBLTest {
         final int aCod = SEGNALAZIONE_APERTA;
         final Utente aUtente = utenteTest2;
         final Boolean res = manager.deleteSegnalazione(aCod, aUtente);
+        System.out.println(" ### Test - testDeleteSegnalazione \nsegnalazione aperta aCod: " + aCod +"\naUtente: "+ aUtente+ "\n\tresult: " + res );
+
         assertFalse(res);
     }
 
@@ -800,6 +851,8 @@ public final class SegnalazioneBLTest {
         final int aCod = SEGNALAZIONE_APERTA;
         final Utente aUtente = utenteTest;
         final Boolean res = manager.deleteSegnalazione(aCod, aUtente);
+        System.out.println(" ### Test - testDeleteSegnalazione \nsegnalazione aperta aCod: " + aCod +"\n aUtente: "+ aUtente+ "\n\tresult: " + res );
+
         assertTrue(res);
     }
 
@@ -812,6 +865,8 @@ public final class SegnalazioneBLTest {
     public void testGetSegnalazioniEffettuate1() throws Exception {
         final Utente aUtente = null;
         manager.getSegnalazioniEffettuate(aUtente);
+        System.out.println(" ### Test - testGetSegnalazioniEffettuate \naUtente: "+ aUtente);
+
     }
 
     /**
@@ -824,6 +879,7 @@ public final class SegnalazioneBLTest {
         final Utente aUtente = new CSU();
         final List<Segnalazione> res = manager
                 .getSegnalazioniEffettuate(aUtente);
+        System.out.println(" ### Test - testGetSegnalazioniEffettuate \n res: "+ res);
         assertNull(res);
     }
 
@@ -837,6 +893,7 @@ public final class SegnalazioneBLTest {
         final Utente aUtente = utenteTest;
         final List<Segnalazione> res = manager
                 .getSegnalazioniEffettuate(aUtente);
+        System.out.println(" ### Test - testGetSegnalazioniEffettuate \naUtente: "+ res + "lista segnalazioni" + listaSegnalazioni);
         assertEquals(new HashSet<>(listaSegnalazioni), new HashSet<>(res));
     }
 
